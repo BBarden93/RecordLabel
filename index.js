@@ -35,11 +35,13 @@ app.post('/albums', (req, res) => {
   Album.create(req.body, (err, brandNewAlbum) => {
     res.json({success: true, message: "Album created.", album: brandNewAlbum})
   })
-  // Album.title
-  // Album.releaseDate
-  // Album.albumArt
 })
 // get a specific album
+app.get('/albums/:id', (req, res) => {
+  Album.findById(req.params.id, (err, thatAlbum) => {
+    res.json(thatAlbum)
+  })
+})
 
 // delete an album
 
@@ -50,6 +52,14 @@ app.post('/albums', (req, res) => {
 // get all songs in an album
 
 // post a new song to a specific album
+app.post('/albums/:id/songs', (req, res) => {
+  Album.findById(req.params.id, (err, thatAlbum) => {
+    thatAlbum.songs.push(req.body)
+    thatAlbum.save((err, savedAlbum) => {
+      res.json({success: true, message: "Song added", album: savedAlbum})
+    })
+  })
+})
 
 // get a specific song from a specific album
 
