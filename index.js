@@ -24,9 +24,21 @@ app.get('/', (req, res) => {
 ///////////////////////////////////////////////
 
 // get all albums
+app.get('/albums', (req, res) => {
+  Album.find({}, (err, allAlbums) => {
+    res.json(allAlbums)
+  })
+})
 
 // post a new album
-
+app.post('/albums', (req, res) => {
+  Album.create(req.body, (err, brandNewAlbum) => {
+    res.json({success: true, message: "Album created.", album: brandNewAlbum})
+  })
+  // Album.title
+  // Album.releaseDate
+  // Album.albumArt
+})
 // get a specific album
 
 // delete an album
