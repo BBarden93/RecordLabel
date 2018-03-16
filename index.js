@@ -5,7 +5,8 @@ const
   bodyParser = require('body-parser'),
   mongoose = require('mongoose'),
   port = process.env.port || 3000,
-  Album = require('./models/Album.js')
+  Album = require('./models/Album.js'),
+  Artist = require('./models/Artist.js')
 
 mongoose.connect('mongodb://localhost/record-label', (err) => {
   console.log(err || "Connected to MongoDB.")
@@ -62,16 +63,43 @@ app.post('/albums/:id/songs', (req, res) => {
 })
 
 // get a specific song from a specific album
+// app.get('/albums/:id/songs/:_id', (req, res) => {
+//   Album.findById(req.params.id, (err, thatAlbum) => {
+//     thatAlbum.songs.id(req.params._id, (err, thatSong) => {
+//       res.json({success: true, message: "View song", song: thatSong})
+//     })
+//   })
+// })
 
 // delete a song from an album
+app.delete('/albums/:id/songs/:_id', (req, res) => {
+  // thatAlbum = Album.findById(req.params.id)
+  // thatAlbum.songs.findByIdAndRemove(req.params._id, (err, thatSong) => {
+  //   res.json({message: "Song removed."})
+  Album.findById(req.params.id, (err, thatAlbum) => {
+    thatAlbum.songs.id(req.params._id).remove()
+    thatAlbum.save((err, savedAlbum) => {
+      res.json({success: true, message: "Song deleted.", album: savedAlbum})
+    })
+  })
+})
 
 
 // ARTIST ROUTES
 ///////////////////////////////////////////////
-
 // index all artists
+app.get('/artists', (req, res) => {
+  Artist.find({}, (err, allDemArtists) => {
+    res.json(allDemArtists)
+  })
+})
 
 // create an artist
+app.post('/artists', (req, res) => {
+  Artist.create(req.body, (err, brandNewArtist) => {
+    res.json({ success: true, message: "artist created.", artist: brandNewArtist})
+  })
+})
 
 // get a specific artist
 
